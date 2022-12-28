@@ -50,6 +50,6 @@ async function onDelete(req, res){
   const collection = await getCollection();
   const documents = await collection.find().toArray();
 
-  await collection.deleteOne({_id: new ObjectId(req.body._id)})
-  res.send(await(documents).toArray());
+  await collection.deleteOne({_id: req.body._id})
+  res.send(await(documents));
 }
