@@ -36,11 +36,13 @@ async function getDatabase(req, res) {
 
 async function putDatabase(req, res){
 
-  const _id = {_id : new ObjectId()}
-  const song = { $set: req.body}
+  const {givenId, ...givenSong} = req.body
+
+  const updatedSong = { $set: givenSong}
+  const udpatedId = {_id : new ObjectId(givenId)}
 
   const collection = await getCollection();
-  await collection.updateOne(_id, song, {upsert: true});
+  await collection.updateOne(udpatedId, updatedSong, {upsert: true});
   const documents = await collection.find().toArray();
   
   res.send(await(documents));
