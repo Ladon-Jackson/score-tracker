@@ -19,6 +19,9 @@ app.route("/getDatabase")
 app.route("/putDatabase")
   .put(putDatabase);
 
+app.route("/onDelete")
+  .delete(onDelete);
+
 server.listen(port, () => {
   console.log("Listening on port " + port)
 }); 
@@ -37,8 +40,16 @@ async function putDatabase(req, res){
   const song = { $set: req.body}
 
   const collection = await getCollection();
-  const a = await collection.updateOne(_id, song, {upsert: true});
+  await collection.updateOne(_id, song, {upsert: true});
   const documents = await collection.find().toArray();
   
   res.send(await(documents));
+}
+
+async function onDelete(req, res){
+  const collection = await getCollection();
+  const documents = await collection.find().toArray();
+
+  await collection.deleteOne({_id: new ObjectId(req.body._id)})
+  res.send(await(documents).toArray());
 }
